@@ -12,7 +12,6 @@ import DeleteIcon from "@material-ui/icons/Delete";
 function FileUploader({ multiple, onChange, files, fieldName }) {
   return (
     <>
-      <FormLabel>Layout File Upload</FormLabel>
       <input
         type="file"
         multiple={multiple}

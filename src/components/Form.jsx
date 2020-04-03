@@ -14,11 +14,9 @@ const steps = [
   "Confirmation"
 ];
 
-const MAX_PAGE = 4;
-
 class Form extends Component {
   state = {
-    currentPage: 2,
+    currentPage: 0,
     orgType: null,
     studentOrgName: null,
     departmentName: null,
@@ -62,37 +60,27 @@ class Form extends Component {
               base64: data
             };
 
-            google.script.run
-              .withSuccessHandler(id => console.log("file created with id", id))
-              .uploadFilesToGoogleDrive(obj, key, "test event folder");
+            // google.script.run
+            //   .withSuccessHandler(id => console.log("file created with id", id))
+            //   .uploadFilesToGoogleDrive(obj, key, "test event folder");
           });
           fr.readAsDataURL(file);
         }
       }
     }
-
-    // handle special cases
-    // if (key === "needTableChairs" && value === "NO")
-    //   setTimeout(this.nextPage, 325);
-    // else if (key === "needAV" && value === "NO") setTimeout(this.nextPage, 325);
   };
 
-  nextPage = () => {
-    if (this.state.currentPage !== MAX_PAGE)
-      this.setState({ currentPage: this.state.currentPage + 1 });
-    else {
-      // submit
-      // for (files of this.state.layoutFiles) {
-      //   console.log(base64)
-      // }
-    }
-    // temporary fix to scroll to top of page
+  goToPage = pageNum => {
+    this.setState({ currentPage: pageNum });
     window.location = "#";
   };
 
-  prevPage = () => {
-    this.setState({ currentPage: this.state.currentPage - 1 });
-    window.location = "#";
+  isStepComplete = index => {
+    return false;
+  };
+
+  onSubmit = () => {
+    console.log("form requested to be submitted");
   };
 
   render() {
@@ -130,11 +118,11 @@ class Form extends Component {
           currentPage={this.state.currentPage}
         />
         <FormStepper
-          title={steps[5]}
           currentPage={this.state.currentPage}
           steps={steps}
-          nextHandler={this.nextPage}
-          prevHandler={this.prevPage}
+          isStepComplete={this.isStepComplete}
+          goToPage={this.goToPage}
+          onSubmit={this.onSubmit}
         />
       </>
     );

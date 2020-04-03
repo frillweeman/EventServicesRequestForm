@@ -7,7 +7,6 @@ import {
   FormLabel
 } from "@material-ui/core";
 import FormPage from "../FormPage";
-import HFlex from "../HFlex";
 
 class Page5 extends Component {
   state = {

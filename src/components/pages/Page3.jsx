@@ -101,6 +101,7 @@ class Page3 extends Component {
             </FormControl>
 
             <FormControl margin="normal">
+              <FormLabel>Layout File Upload</FormLabel>
               <FileUploader
                 multiple
                 fieldName="layoutFiles"

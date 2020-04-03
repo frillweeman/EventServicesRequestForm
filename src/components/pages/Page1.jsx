@@ -36,8 +36,8 @@ class Page1 extends Component {
 
         <Divider style={{ margin: "1.5em 0" }} />
 
-        <FormLabel style={{ display: "block" }}>Organization Type</FormLabel>
-        <FormControl margin="normal">
+        <FormControl margin="normal" required>
+          <FormLabel style={{ display: "block" }}>Organization Type</FormLabel>
           <RadioGroup
             aria-label="organization type"
             name="orgType"
@@ -58,7 +58,7 @@ class Page1 extends Component {
             />
           </RadioGroup>
         </FormControl>
-        <FormControl fullWidth margin="normal">
+        <FormControl fullWidth margin="normal" required>
           {this.props.data.orgType === orgTypes.STUDENT && (
             <Autocomplete
               autoHighlight
@@ -99,7 +99,7 @@ class Page1 extends Component {
           )}
         </FormControl>
 
-        <FormControl margin="normal" fullWidth>
+        <FormControl margin="normal" fullWidth required>
           <HFlex>
             <TextField
               style={{ width: "48%" }}

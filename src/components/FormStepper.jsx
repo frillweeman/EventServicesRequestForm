@@ -1,33 +1,43 @@
 import React, { Component } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Stepper from "@material-ui/core/Stepper";
-import Step from "@material-ui/core/Step";
-import StepLabel from "@material-ui/core/StepLabel";
-import Button from "@material-ui/core/Button";
+import {
+  Stepper,
+  Step,
+  StepButton,
+  StepLabel,
+  Button
+} from "@material-ui/core";
 import HFlex from "./HFlex";
-import { ChevronLeft, ChevronRight, Send } from "@material-ui/icons";
+import { ChevronLeft, ChevronRight } from "@material-ui/icons";
 
 export default class FormStepper extends Component {
   render() {
     return (
       <div style={{ marginTop: "1em", width: "100%" }}>
         <Stepper
-          activeStep={this.props.currentPage}
-          alternativeLabel
           square={false}
           elevation={2}
+          alternativeLabel
+          nonLinear
+          activeStep={this.props.currentPage}
         >
-          {this.props.steps.map(label => (
-            <Step key={label}>
-              <StepLabel>{label}</StepLabel>
-            </Step>
-          ))}
+          {this.props.steps.map((label, index) => {
+            return (
+              <Step key={label}>
+                <StepButton
+                  onClick={() => this.props.goToPage(index)}
+                  completed={this.props.isStepComplete(index)}
+                >
+                  {label}
+                </StepButton>
+              </Step>
+            );
+          })}
         </Stepper>
         <div style={{ margin: "1em 0" }}>
           <HFlex>
             <Button
               disabled={this.props.currentPage === 0}
-              onClick={this.props.prevHandler}
+              onClick={() => this.props.goToPage(this.props.currentPage - 1)}
               style={{ marginRight: "0.5em" }}
             >
               <ChevronLeft style={{ verticalAlign: "middle" }} />
@@ -36,7 +46,11 @@ export default class FormStepper extends Component {
             <Button
               variant="contained"
               color="primary"
-              onClick={this.props.nextHandler}
+              onClick={() => {
+                if (this.props.currentPage === this.props.steps.length)
+                  this.props.onSubmit();
+                else this.props.goToPage(this.props.currentPage + 1);
+              }}
             >
               {this.props.currentPage === this.props.steps.length - 1 ? (
                 "Submit"

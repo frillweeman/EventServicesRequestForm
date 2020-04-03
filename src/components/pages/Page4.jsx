@@ -8,8 +8,7 @@ import {
   TextField,
   Divider
 } from "@material-ui/core";
-import { Autocomplete } from "@material-ui/lab";
-import MuiPhoneNumber from "material-ui-phone-number";
+import FileUploader from "../FileUploader";
 import FormPage from "../FormPage";
 import HFlex from "../HFlex";
 
@@ -113,6 +112,16 @@ class Page4 extends Component {
                   label="No"
                 />
               </RadioGroup>
+            </FormControl>
+
+            <FormControl margin="normal">
+              <FormLabel>Media File Upload</FormLabel>
+              <FileUploader
+                multiple
+                fieldName="avFiles"
+                files={this.props.data.layoutFiles}
+                onChange={this.props.onChange}
+              />
             </FormControl>
           </>
         )}
