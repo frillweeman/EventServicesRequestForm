@@ -14,6 +14,7 @@ export default class FormStepper extends Component {
     return (
       <div style={{ marginTop: "1em", width: "100%" }}>
         <Stepper
+          style={{ overflowX: "scroll" }}
           square={false}
           elevation={2}
           alternativeLabel

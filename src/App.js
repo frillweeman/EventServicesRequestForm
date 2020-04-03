@@ -1,26 +1,28 @@
 import React from "react";
 import { Container } from "@material-ui/core";
-import { ThemeProvider } from "@material-ui/styles";
-import { createMuiTheme } from "@material-ui/core";
-import { blue } from "@material-ui/core/colors";
+import AppBar from "./components/AppBar";
 import Form from "./components/Form";
+import { makeStyles } from "@material-ui/styles";
 import "./App.css";
 
-const theme = createMuiTheme({
-  palette: {
-    primary: blue
+const useStyles = makeStyles(theme => ({
+  offset: {
+    marginTop: "1em"
   }
-});
+}));
 
 function App() {
+  const classes = useStyles();
+
   return (
-    <ThemeProvider theme={theme}>
-      <div className="App">
+    <>
+      <AppBar title="UAH Event Services Request Form" />
+      <div className={classes.offset}>
         <Container maxWidth="md">
           <Form />
         </Container>
       </div>
-    </ThemeProvider>
+    </>
   );
 }
 

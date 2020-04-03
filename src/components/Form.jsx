@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import Page1 from "./pages/Page1";
-import Page2 from "./pages/Page2";
-import Page3 from "./pages/Page3";
-import Page4 from "./pages/Page4";
-import Page5 from "./pages/Page5";
+import OrganizationPage from "./pages/OrganizationPage";
+import EventPage from "./pages/EventPage";
+import TableChairPage from "./pages/TableChairPage";
+import AVPage from "./pages/AVPage";
+import ConfirmationPage from "./pages/ConfirmationPage";
 import FormStepper from "./FormStepper";
 
 const steps = [
@@ -17,27 +17,27 @@ const steps = [
 class Form extends Component {
   state = {
     currentPage: 0,
-    orgType: null,
-    studentOrgName: null,
-    departmentName: null,
-    contactName: null,
-    contactNumber: null,
-    eventName: null,
+    orgType: "",
+    studentOrgName: "",
+    departmentName: "",
+    contactName: "",
+    contactNumber: "",
+    eventName: "",
     eventDate: null,
-    eventStartTime: null,
-    eventEndTime: null,
-    eventLocation: null,
-    eventDescription: null,
+    eventStartTime: "",
+    eventEndTime: "",
+    eventLocation: "",
+    eventDescription: "",
     estimatedAttendance: null,
     presidentAttending: null,
     needTableChairs: null,
     tables60Round: null,
-    tables6ftRound: null,
+    tables6ftRect: null,
     chairs: null,
-    layoutDescription: null,
+    layoutDescription: "",
     layoutFiles: [],
     needAV: null,
-    avDescription: null,
+    avDescription: "",
     avTechnician: null,
     showingMovie: null,
     avFiles: [],
@@ -46,8 +46,11 @@ class Form extends Component {
 
   handleChange = (key, value) => {
     this.setState({ [key]: value });
+
+    // echo new data
     console.log({ [key]: value });
 
+    // handle file uploads
     if (value instanceof Array) {
       if (value.length && value[0] instanceof File) {
         for (let file of value) {
@@ -62,7 +65,7 @@ class Form extends Component {
 
             // google.script.run
             //   .withSuccessHandler(id => console.log("file created with id", id))
-            //   .uploadFilesToGoogleDrive(obj, key, "test event folder");
+            //   .uploadFilesToGoogleDrive(obj, key, this.state.eventName);
           });
           fr.readAsDataURL(file);
         }
@@ -76,7 +79,77 @@ class Form extends Component {
   };
 
   isStepComplete = index => {
-    return false;
+    let complete = false;
+
+    switch (index) {
+      case 0:
+        const {
+          orgType,
+          studentOrgName,
+          departmentName,
+          contactName,
+          contactNumber
+        } = this.state;
+        complete =
+          orgType &&
+          (studentOrgName || departmentName) &&
+          contactName &&
+          contactNumber;
+        break;
+      case 1:
+        const {
+          eventName,
+          eventDate,
+          eventStartTime,
+          eventEndTime,
+          eventLocation,
+          eventDescription,
+          estimatedAttendance,
+          presidentAttending
+        } = this.state;
+        complete =
+          eventName &&
+          eventDate &&
+          eventStartTime &&
+          eventEndTime &&
+          eventLocation &&
+          eventDescription &&
+          estimatedAttendance != null &&
+          presidentAttending;
+        break;
+      case 2:
+        const {
+          needTableChairs,
+          tables60Round,
+          tables6ftRound,
+          chairs,
+          layoutDescription
+        } = this.state;
+        complete =
+          needTableChairs === "NO" ||
+          (needTableChairs === "YES" &&
+            tables60Round != null &&
+            tables6ftRound != null &&
+            chairs != null &&
+            layoutDescription);
+        break;
+      case 3:
+        const {
+          needAV,
+          avDescription,
+          avTechnician,
+          showingMovie
+        } = this.state;
+        complete =
+          needAV === "NO" ||
+          (needAV === "YES" && avDescription && avTechnician && showingMovie);
+        break;
+      case 4:
+        complete = this.state.agree;
+        break;
+    }
+
+    return Boolean(complete);
   };
 
   onSubmit = () => {
@@ -84,39 +157,60 @@ class Form extends Component {
   };
 
   render() {
+    let page;
+
+    switch (this.state.currentPage) {
+      case 1:
+        page = (
+          <EventPage
+            title={steps[1]}
+            data={this.state}
+            onChange={this.handleChange}
+          />
+        );
+        break;
+      case 2:
+        page = (
+          <TableChairPage
+            title={steps[2]}
+            data={this.state}
+            onChange={this.handleChange}
+          />
+        );
+        break;
+      case 3:
+        page = (
+          <AVPage
+            title={steps[3]}
+            data={this.state}
+            onChange={this.handleChange}
+          />
+        );
+        break;
+      case 4:
+        page = (
+          <ConfirmationPage
+            title={steps[4]}
+            data={this.state}
+            onChange={this.handleChange}
+          />
+        );
+        break;
+      case 0:
+      default:
+        page = (
+          <OrganizationPage
+            title={steps[0]}
+            data={this.state}
+            onChange={this.handleChange}
+          />
+        );
+        break;
+    }
+
     return (
       <>
-        <h1>Event Services Request Form</h1>
-        <Page1
-          title={steps[0]}
-          data={this.state}
-          onChange={this.handleChange}
-          currentPage={this.state.currentPage}
-        />
-        <Page2
-          title={steps[1]}
-          data={this.state}
-          onChange={this.handleChange}
-          currentPage={this.state.currentPage}
-        />
-        <Page3
-          title={steps[2]}
-          data={this.state}
-          onChange={this.handleChange}
-          currentPage={this.state.currentPage}
-        />
-        <Page4
-          title={steps[3]}
-          data={this.state}
-          onChange={this.handleChange}
-          currentPage={this.state.currentPage}
-        />
-        <Page5
-          title={steps[4]}
-          data={this.state}
-          onChange={this.handleChange}
-          currentPage={this.state.currentPage}
-        />
+        {page}
         <FormStepper
           currentPage={this.state.currentPage}
           steps={steps}
